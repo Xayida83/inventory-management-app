@@ -36,3 +36,31 @@ export function validateItemData(data) {
   // Returnera true (det finns fel) och en lista med fel om några finns, annars false och en tom lista
   return [errors.length > 0, errors];
 }
+
+export function validateUserData(data) {
+  const errors = [];
+
+  // Kontrollera att name finns och är en sträng
+  if (!data.name || typeof data.name !== 'string') {
+    errors.push('Name is required and must be a string.');
+  }
+
+  // Kontrollera att email finns, är en sträng, och har ett giltigt format
+  if (!data.email || typeof data.email !== 'string' || !validateEmailFormat(data.email)) {
+    errors.push('A valid email is required.');
+  }
+
+  // Kontrollera att password finns och är en sträng
+  if (!data.password || typeof data.password !== 'string' || data.password.length < 6) {
+    errors.push('Password is required and must be at least 6 characters long.');
+  }
+
+  // Returnera true (det finns fel) och en lista med fel om några finns, annars false och en tom lista
+  return [errors.length > 0, errors];
+}
+
+// Hjälpfunktion för att kontrollera e-postformat
+function validateEmailFormat(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
