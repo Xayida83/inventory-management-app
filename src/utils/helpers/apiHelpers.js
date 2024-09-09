@@ -32,7 +32,10 @@ export function validateItemData(data) {
   if (data.description && typeof data.description !== 'string') {
     errors.push('Description must be a string.');
   }
-
+  // Kontrollera att category är en sträng om den är tillgänglig (valfritt)
+  if (data.category && typeof data.category !== 'string') {
+    errors.push('Category must be a string.');
+  }
   // Returnera true (det finns fel) och en lista med fel om några finns, annars false och en tom lista
   return [errors.length > 0, errors];
 }

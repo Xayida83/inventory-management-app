@@ -4,7 +4,7 @@ import { object404Respsonse, validateItemData, validateJSONData } from "@/utils/
 
 const prisma = new PrismaClient();
 
-//Read one
+//! Read one / GET by id
 export async function GET(req, options) {
   const id = options.params.id; 
 
@@ -48,6 +48,7 @@ export async function PUT(req, options) {
         data: { name: body.name,
           description: body.description,
           quantity: body.quantity,
+          category: body.category,
         },
       }
     );
