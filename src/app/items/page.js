@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth";
+// import ItemList from "@/components/ItemList";
 import ItemList from "@/components/ItemList";
 
 export default function ItemsPage() {
@@ -35,10 +36,7 @@ export default function ItemsPage() {
         const data = await response.json();
         setItems(data);
       } catch (error) {
-        console.error(
-          "Error fetching items:",
-          error
-        );
+        console.error("Error fetching items:", error);
         setError(error.message);
         setItems([]);
       } finally {
@@ -51,6 +49,16 @@ export default function ItemsPage() {
     }
   }, [auth.token]);
 
+  //* Hantera uppdateringen av item
+  const handleItemUpdated = (updatedItem) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === updatedItem.id ? updatedItem : item
+      )
+    );
+  };
+
+
   //* Hantera borttagning av item
   const handleItemDeleted = (deletedItemId) => {
     setItems((prevItems) =>
@@ -61,7 +69,7 @@ export default function ItemsPage() {
   return (
     <main className="flex flex-col items-center justify-between p-24">
       <h1 className="text-3xl font-bold">Items List</h1>
-      <section className="flex flex-col items-center justify-center gap-4">
+      <section className="flex w-full flex-col items-center justify-center">
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
@@ -71,6 +79,7 @@ export default function ItemsPage() {
             <ItemList
               key={item.id}
               item={item}
+              onItemUpdated={handleItemUpdated} // Skicka callback för uppdatering
               onItemDeleted={handleItemDeleted} // Skicka callback-funktion till ItemList
             />
           ))

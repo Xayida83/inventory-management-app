@@ -138,7 +138,7 @@ export async function PUT(req, options) {
     return NextResponse.json(updatedItem, { status: 200 });
   } catch (error) {
     // Om item inte hittas eller det uppstår andra fel
-    return NextResponse.json({ message: "Item not found or update failed" }, { status: 404 });
+    return NextResponse.json({ message: "Item not found or update failed" + error.message }, { status: 404 });
   }
 }
 
