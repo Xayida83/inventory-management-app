@@ -1,5 +1,7 @@
+"use client"
 
 import { useAuth } from "@/context/auth";
+import { useRouter } from "next/navigation";
 
 // function ItemList({ item }) {
 //   return (
@@ -37,9 +39,11 @@ import { useAuth } from "@/context/auth";
 
 // export default ItemList;
 
-function ItemList({ item }) {
+function ItemList({ item, onItemDeleted  }) {
   const auth = useAuth();
+  const router = useRouter();
 
+  //* Funktion för att radera ett item
   const handleDelete = async () => {
     try {
       const response = await fetch(`http://localhost:3000/api/items/${item.id}`, {
@@ -53,9 +57,21 @@ function ItemList({ item }) {
         throw new Error("Failed to delete item");
       }
       console.log("Item deleted successfullly");
+
+       // Om item raderats, informera parent-komponenten
+      if (onItemDeleted) {
+        onItemDeleted(item.id);  // Passera vidare information om borttaget item till parent
+      }
     } catch (error) {
       console.error("Error deleteing item: ", error);
     }
+  };
+
+  //* Funktion för att navigera till redigeringssidan
+  const handleEdit = () => {
+    // Navigera användaren till redigeringssidan för detta item
+    //TODO gör en sida för att ändra en item
+    router.push(`/items/edit/${item.id}`);
   };
 
   return (
@@ -74,7 +90,7 @@ function ItemList({ item }) {
 
       {/* Knappar för att radera och redigera */}
       <div className="flex justify-between items-center mt-4">
-        <button className="text-blue-500 hover:text-blue-700" title="Edit item">
+        <button className="text-blue-500 hover:text-blue-700" title="Edit item" onClick={handleEdit}>
           ✏️ {/* Edit icon */}
         </button>
         <button className="text-red-500 hover:text-red-700" title="Delete item" onClick={handleDelete}>

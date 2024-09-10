@@ -1,4 +1,4 @@
-"use client"; // Ensure this is a client component
+"use client"
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth";
@@ -7,8 +7,8 @@ import ItemList from "@/components/ItemList";
 export default function ItemsPage() {
   const auth = useAuth();
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
-  const [error, setError] = useState(null); // Add error state
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -51,15 +51,28 @@ export default function ItemsPage() {
     }
   }, [auth.token]);
 
+  //* Hantera borttagning av item
+  const handleItemDeleted = (deletedItemId) => {
+    setItems((prevItems) =>
+      prevItems.filter((item) => item.id !== deletedItemId)
+    );
+  };
+
   return (
     <main className="flex flex-col items-center justify-between p-24">
-      <h1 className="text-3xl font-bold">
-        Items List
-      </h1>
+      <h1 className="text-3xl font-bold">Items List</h1>
       <section className="flex flex-col items-center justify-center gap-4">
-        {items.length > 0 ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : items.length > 0 ? (
           items.map((item) => (
-            <ItemList key={item.id} item={item} />
+            <ItemList
+              key={item.id}
+              item={item}
+              onItemDeleted={handleItemDeleted} // Skicka callback-funktion till ItemList
+            />
           ))
         ) : (
           <p>No items found</p>
