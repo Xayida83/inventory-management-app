@@ -22,7 +22,7 @@ export default function ItemsPage() {
             headers: {
               Authorization:
                 "Bearer " + auth.token,
-              "Content-Type": "application/json",
+                "Content-Type": "application/json",
             },
           }
         );
