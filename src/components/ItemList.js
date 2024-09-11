@@ -140,7 +140,7 @@ console.log(JSON.stringify(editedItem))
   };
 
   return (
-    <div className="flex w-full rounded overflow-hidden shadow-lg bg-white p-6 m-2">
+    <div className="flex  w-full rounded overflow-hidden shadow-lg bg-white p-6 m-2">
       {isEditing ? (
         // Redigeringsläge: visa input-fält för redigering
         <>
@@ -189,22 +189,24 @@ console.log(JSON.stringify(editedItem))
       ) : (
         // Visa item-information om inte i redigeringsläge
         <>
-          <div className="font-bold text-xl mb-2">
+        <div className="flex items-center justify-between mt-4 gap-4
+        ">
+          <p className="font-bold text-xl w-fit">
             {item.name}
-          </div>
-          <p className="text-gray-700 text-base">
+          </p>
+          <p className="text-gray-700 text-base w-fit">
             <span className="font-semibold">
               Description:
             </span>{" "}
             {item.description || "No description"}
           </p>
-          <p className="text-gray-700 text-base">
+          <p className="text-gray-700 text-base w-fit">
             <span className="font-semibold">
               Category:
             </span>{" "}
             {item.category}
           </p>
-          <p className="text-gray-700 text-base">
+          <p className="text-gray-700 text-base w-fit">
             <span className="font-semibold">
               Quantity:
             </span>{" "}
@@ -212,7 +214,7 @@ console.log(JSON.stringify(editedItem))
           </p>
 
           {/* Knappar för att radera och redigera */}
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex w-fit items-center gap-4">
             <button
               className="text-blue-500 hover:text-blue-700"
               title="Edit item"
@@ -226,6 +228,7 @@ console.log(JSON.stringify(editedItem))
               onClick={handleDelete}>
               🗑️ {/* Delete icon */}
             </button>
+          </div>
           </div>
         </>
       )}

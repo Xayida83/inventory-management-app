@@ -42,7 +42,7 @@ const prisma = new PrismaClient();
 // }
 
 export async function GET(req) {
-  //TODO gör till en egen funktion användning ett
+  //TODO gör till en egen funktion användning ett Verifiera JWT-token
   const authHeader = req.headers.get("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return NextResponse.json(
@@ -67,14 +67,37 @@ export async function GET(req) {
   }
   // funktion ned hit
 
+  const url = new URL(req.url);
+  const category = url.searchParams.get("category") || ""; // Om ingen kategori anges, använd tom sträng
+  const inStock = url.searchParams.get("inStock") === "true"; // Konvertera inStock till boolean
+
   try {
-    const items = await prisma.item.findMany();
+    // Filtrera items baserat på kategori och lagerstatus
+    const items = await prisma.item.findMany({
+      where: {
+        // Filtrera om en kategori anges
+        ...(category && {
+          category: {
+            contains: category, // Använd "contains" för att matcha delvis
+            mode: "insensitive", // Gör sökningen skiftlägesokänslig
+          },
+        }),
+        // Filtrera efter lagerstatus om "inStock" är true
+        ...(inStock && {
+          quantity: {
+            gt: 0,  // Om inStock är true, välj bara items med quantity > 0
+          },
+        })
+      },
+    });
+
     return NextResponse.json(
       items, 
       { 
         status: 200 
       });
   } catch (error) {
+    console.error("Error fetching items:", error);
     return NextResponse.json(
       {
         message: "Something went wrong"
@@ -86,63 +109,6 @@ export async function GET(req) {
 }
 
 //! POST
-// export async function POST(req){
-
-//   const [tokenError, decoded] = verifyToken(req);
-//   if (tokenError) {
-//     console.log("Token verification failed:", tokenError.message);
-//     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-//   }
-  
-//   //Validera att body är korrekt JSON
-//   const [bodyHasErrors, body] = await validateJSONData(req);
-//   if (bodyHasErrors) {
-//     return NextResponse.json(
-//       {
-//         message: "A valid JSON object has to be sent",
-//       }, {
-//         status: 400
-//       }
-//     );
-//   }
-
-//   // Validera inkommande data
-//   const [hasErrors, errors] = validateItemData(body);
-//   if (hasErrors) {
-//     return NextResponse.json(
-//       {
-//         message: errors.join(', ') //Retunerar felen som en lista
-//       }, {
-//         status: 400
-//       }
-//     );     
-//   }
-
-//   // Försöker skapa item
-//   try {
-//     const item = await prisma.item.create({
-//       data: {
-//         name: body.name,
-//         description: body.description,
-//         quantity: body.quantity,
-//         category: body.category,
-//       },
-//     });
-//     return NextResponse.json(
-//       item, 
-//       {
-//       status: 201
-//       });
-//   } catch (error) {
-//     return NextResponse.json(
-//       {
-//         message: "Invalid data sent for item creation",
-//       }, {
-//         status: 400
-//       }
-//     );
-//   }
-// }
 
 export async function POST(req) {
   //TODO gör till en egen funktion användning 2

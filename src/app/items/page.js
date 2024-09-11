@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth";
-// import ItemList from "@/components/ItemList";
 import ItemList from "@/components/ItemList";
 
 export default function ItemsPage() {
@@ -10,7 +9,10 @@ export default function ItemsPage() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
+  const [searchCategory, setSearchCategory] = useState(""); // Sökterm för kategori
+  const [inStockOnly, setInStockOnly] = useState(false);   // Filter för items i lager
 
+  // Hämta items från API
   useEffect(() => {
     const fetchItems = async () => {
       setLoading(true); // Start loading
@@ -18,7 +20,7 @@ export default function ItemsPage() {
 
       try {
         const response = await fetch(
-          "http://localhost:3000/api/items",
+          `http://localhost:3000/api/items?category=${searchCategory}&inStock=${inStockOnly}`,  // Passar kategorin och lagerstatus till API:et
           {
             headers: {
               Authorization:
@@ -47,7 +49,7 @@ export default function ItemsPage() {
     if (auth.token) {
       fetchItems();
     }
-  }, [auth.token]);
+  }, [auth.token, searchCategory, inStockOnly]);
 
   //* Hantera uppdateringen av item
   const handleItemUpdated = (updatedItem) => {
@@ -66,8 +68,48 @@ export default function ItemsPage() {
     );
   };
 
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchCategory(e.target.value);
+  };
+
+  // Handle in-stock checkbox change
+  const handleInStockChange = (e) => {
+    setInStockOnly(e.target.checked);
+  };
+
   return (
     <main className="flex flex-col items-center justify-between p-24">
+      {/* Header section för sök, filter och skapa */}
+      <header className="w-full flex items-center justify-between p-4 bg-gray-200 mb-4 rounded">
+        <div className="flex items-center space-x-4">
+          {/* Sök kategori */}
+          <input
+            type="text"
+            placeholder="Search category"
+            value={searchCategory}
+            onChange={handleSearchChange}
+            className="p-2 border border-gray-400 rounded"
+          />
+
+          {/* Filtrering av i lager */}
+          <label className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              checked={inStockOnly}
+              onChange={handleInStockChange}
+            />
+            <span>In Stock Only</span>
+          </label>
+        </div>
+
+        {/* Skapa item knapp */}
+        <button className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700">
+          + Create Item
+        </button>
+      </header>
+
+      {/* Listan för items */}
       <h1 className="text-3xl font-bold">Items List</h1>
       <section className="flex w-full flex-col items-center justify-center">
         {loading ? (
