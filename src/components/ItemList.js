@@ -189,7 +189,7 @@ console.log(JSON.stringify(editedItem))
       ) : (
         // Visa item-information om inte i redigeringsläge
         <>
-        <div className="flex items-center justify-between mt-4 gap-4
+        <div className="flex w-full items-center justify-between mt-4 gap-4
         ">
           <p className="font-bold text-xl w-fit">
             {item.name}

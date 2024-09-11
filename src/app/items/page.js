@@ -82,7 +82,7 @@ export default function ItemsPage() {
     <main className="flex flex-col items-center justify-between p-24">
       {/* Header section för sök, filter och skapa */}
       <header className="w-full flex items-center justify-between p-4 bg-gray-200 mb-4 rounded">
-        <div className="flex items-center space-x-4">
+        <div className="flex w-full items-center space-x-4">
           {/* Sök kategori */}
           <input
             type="text"
