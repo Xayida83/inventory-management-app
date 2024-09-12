@@ -15,6 +15,8 @@ export default function CreateItemModal({ onClose, onItemCreated }) {
     e.preventDefault();
 
     try {
+      console.log({ name, description, category, quantity }); 
+
       const response = await fetch("http://localhost:3000/api/items", {
         method: "POST",
         headers: {
@@ -29,8 +31,8 @@ export default function CreateItemModal({ onClose, onItemCreated }) {
       }
 
       const newItem = await response.json();
-      onItemCreated(newItem); // Skicka tillbaka det skapade itemet till parent
-      onClose(); // Stäng modalen
+      onItemCreated(); // Skicka tillbaka det skapade itemet till parent
+      // onClose(); // Stäng modalen
     } catch (error) {
       setError(error.message);
     }
@@ -73,6 +75,7 @@ export default function CreateItemModal({ onClose, onItemCreated }) {
           <div className="mb-4">
             <input
               type="number"
+              min="0"
               placeholder="Quantity"
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}

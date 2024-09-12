@@ -22,11 +22,11 @@ export async function signJWT(payload) {
 //*verifyJWT: Verifierar JWT-token och returnerar payloaden om token är giltigt.
 export async function verifyJWT(token) {
     try {
-        const verified = await jose.jwtVerify(
-            token,
+        const { payload } = await jose.jwtVerify(
+            token, 
             encodedSecret()
-        )    
-        return verified.payload 
+        );
+        return payload;
     } catch (error) {
         console.error("Invalid or expired token", error);
         return null; // Returnera null om verifieringen misslyckas

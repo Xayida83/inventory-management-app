@@ -18,39 +18,39 @@ export default function ItemsPage() {
 
   // Hämta items från API
   useEffect(() => {
-    const fetchItems = async () => {
-      setLoading(true); // Start loading
-      setError(null); // Reset error
-
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/items?category=${searchCategory}&inStock=${inStockOnly}`,  // Passar kategorin och lagerstatus till API:et
-          {
-            headers: {
-              Authorization: "Bearer " + auth.token,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch items");
-        }
-
-        const data = await response.json();
-        setItems(data);
-      } catch (error) {
-        console.error("Error fetching items:", error);
-        setError(error.message);
-        setItems([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (auth.token) {
       fetchItems();
     }
   }, [auth.token, searchCategory, inStockOnly]);
+
+  const fetchItems = async () => {
+    setLoading(true); // Start loading
+    setError(null); // Reset error
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/items?category=${searchCategory}&inStock=${inStockOnly}`,  // Passar kategorin och lagerstatus till API:et
+        {
+          headers: {
+            Authorization: "Bearer " + auth.token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch items");
+      }
+
+      const data = await response.json();
+      setItems(data);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+      setError(error.message);
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //* Hantera uppdateringen av item
   const handleItemUpdated = (updatedItem) => {
@@ -69,8 +69,9 @@ export default function ItemsPage() {
   };
 
   //* Hantera skapandet av ett nytt item
-  const handleItemCreated = (newItem) => {
-    setItems((prevItems) => [...prevItems, newItem]); // Lägger till det nya itemet i listan
+  const handleItemCreated = () => {
+    fetchItems(); // Hämta alla items igen från databasen
+    setIsModalOpen(false); // Stäng modalen
   };
 
   return (
@@ -110,6 +111,7 @@ export default function ItemsPage() {
         <CreateItemModal
           onClose={() => setIsModalOpen(false)}  // Stäng modalen
           onItemCreated={handleItemCreated}      // Skicka callback-funktion när ett item skapas
+
         />
       )}
     </main>

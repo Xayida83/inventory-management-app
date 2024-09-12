@@ -132,6 +132,7 @@ function ItemList({
           />
           <input
             type="number"
+            min="0"
             name="quantity"
             value={editedItem.quantity}
             onChange={handleInputChange}
