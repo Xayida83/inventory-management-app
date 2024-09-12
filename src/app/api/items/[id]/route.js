@@ -1,22 +1,27 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { object404Respsonse, validateItemData, validateJSONData } from "@/utils/helpers/apiHelpers";
-import { verifyJWT } from "@/utils/helpers/authHelpers";
+import { verifyJWT, getAuthHeader} from "@/utils/helpers/authHelpers";
 
 const prisma = new PrismaClient();
 
 //! DELETE
 export async function DELETE(req, options) {
-  const authHeader = req.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const token = getAuthHeader(req);
+  
+  if (!token) {
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
   }
 
-  const token = authHeader.split(" ")[1];
-  const decoded = await verifyJWT(token)
-
+  const decoded = verifyJWT(token);
   if (!decoded) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
   }
 
   // get id from request
@@ -49,45 +54,6 @@ export async function DELETE(req, options) {
   }
 }
 
-//! PUT / UPDATE
-// export async function PUT(req, options) {
-//   const id = options.params.id;
-
-//   const [bodyHasErrors, body] = await validateJSONData(req);
-//   if (bodyHasErrors) {
-//     return NextResponse.json({
-//       message: "A valid JSON object has to be sent",
-//     }, {
-//       status: 400
-//     }
-//   );
-//   }
-
-//   const [hasErrors, errors] = validateItemData(body);
-//   if (hasErrors) {
-//     return NextResponse.json({
-//       message: errors,
-//     }, {
-//       status: 400
-//     });
-//   }
-
-//   try {
-//     const updatedItem = await prisma.item.update(
-//       {
-//         where: { id: Number(id)},
-//         data: { name: body.name,
-//           description: body.description,
-//           quantity: body.quantity,
-//           category: body.category,
-//         },
-//       }
-//     );
-//     return NextResponse.json(updatedItem);
-//   } catch (error) {
-//       return object404Respsonse(NextResponse, "Item");
-//   }
-// }
 export async function PUT(req, options) {
   const id = options.params.id;
   const token = getAuthHeader(req);
