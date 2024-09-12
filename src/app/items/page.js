@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/auth";
+import ItemActions from "@/components/ItemActions";
 import ItemList from "@/components/ItemList";
 import CreateItemModal from "@/components/CreateItemModal";
 
@@ -85,36 +86,13 @@ export default function ItemsPage() {
   return (
     <main className="flex flex-col items-center justify-between p-24">
       {/* Header section för sök, filter och skapa */}
-      <header className="w-full flex items-center justify-between p-4 bg-gray-200 mb-4 rounded">
-        <div className="flex w-fit items-center space-x-4">
-          {/* Sök kategori */}
-          <input
-            type="text"
-            placeholder="Search category"
-            value={searchCategory}
-            onChange={handleSearchChange}
-            className="p-2 border border-gray-400 rounded"
-          />
-
-          {/* Filtrering av i lager */}
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={inStockOnly}
-              onChange={handleInStockChange}
-            />
-            <span>In Stock Only</span>
-          </label>
-        </div>
-
-        {/* Skapa item knapp */}
-        <button
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700"
-          onClick={() => setIsModalOpen(true)}  // Öppna modalen när knappen klickas
-        >
-          + Create Item
-        </button>
-      </header>
+      <ItemActions
+        searchCategory={searchCategory}
+        setSearchCategory={setSearchCategory}
+        inStockOnly={inStockOnly}
+        setInStockOnly={setInStockOnly}
+        onCreateNewItem={() => setIsModalOpen(true)} // Callback för att öppna modal
+      />
 
       {/* Listan för items */}
       <h1 className="text-3xl font-bold">Items List</h1>
