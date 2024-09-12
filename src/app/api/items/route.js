@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { verifyJWT } from "@/utils/helpers/authHelpers";  // Importera JWT-verifieringsfunktionen
+import { verifyJWT, getAuthHeader } from "@/utils/helpers/authHelpers";  // Importera JWT-verifieringsfunktionen
 
 // import { validateItemData, validateJSONData } from "@/utils/helpers/apiHelpers";
 // import { verifyToken } from "@/utils/helpers/authHelpers";
@@ -42,30 +42,22 @@ const prisma = new PrismaClient();
 // }
 
 export async function GET(req) {
-  //TODO gör till en egen funktion användning ett Verifiera JWT-token
-  const authHeader = req.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  const token = getAuthHeader(req);
+  
+  if (!token) {
     return NextResponse.json(
-      {
-        message: "Unauthorized"
-      }, {
-        status: 401
-      }
-    );    
-  }
-
-  const token = authHeader.split(" ")[1];
-  const decoded = await verifyJWT(token);
-  if (!decoded) {
-    return NextResponse.json(
-      {
-        message: "Unauthorized"
-      },{
-        status: 401
-      }
+      { message: "Unauthorized" },
+      { status: 401 }
     );
   }
-  // funktion ned hit
+
+  const decoded = verifyJWT(token);
+  if (!decoded) {
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
 
   const url = new URL(req.url);
   const category = url.searchParams.get("category") || ""; // Om ingen kategori anges, använd tom sträng
@@ -111,31 +103,22 @@ export async function GET(req) {
 //! POST
 
 export async function POST(req) {
-  //TODO gör till en egen funktion användning 2
-  const authHeader = req.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  const token = getAuthHeader(req);
+  
+  if (!token) {
     return NextResponse.json(
-      {
-        message: "Unauthorized"
-      }, {
-        status: 401
-      }
+      { message: "Unauthorized" },
+      { status: 401 }
     );
   }
 
-  const token = authHeader.split(" ")[1];
-  const decoded = await verifyJWT(token);
-
+  const decoded = verifyJWT(token);
   if (!decoded) {
     return NextResponse.json(
-      {
-        message: "Unauthorized"
-      },{
-        status: 401
-      }
+      { message: "Unauthorized" },
+      { status: 401 }
     );
   }
-  //egen funktion hit
 
   try {
     const body = await req.json();

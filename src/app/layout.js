@@ -13,7 +13,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className= "bg-gradient-to-b from-gray-200 to-white text-black dark:from-black dark:to-black dark:text-white">
         <AuthProvider>
           <Header/>
           {children}

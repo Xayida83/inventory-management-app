@@ -67,7 +67,7 @@ function ItemList({
       [name]: name === "quantity" ? Number(value) : value
     }));
   };
-console.log(JSON.stringify(editedItem))
+  
   // Funktion för att spara ändringar
   const handleSave = async () => {
     try {

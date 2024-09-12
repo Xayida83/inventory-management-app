@@ -90,18 +90,21 @@ export async function DELETE(req, options) {
 // }
 export async function PUT(req, options) {
   const id = options.params.id;
-
-  //TODO egen funktion användningsområde 3
-  const authHeader = req.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  const token = getAuthHeader(req);
+  
+  if (!token) {
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
   }
 
-  const token = authHeader.split(" ")[1];
-  const decoded = await verifyJWT(token);
-
+  const decoded = verifyJWT(token);
   if (!decoded) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
   }
 
   // Validera JSON-data från begäran

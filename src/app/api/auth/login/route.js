@@ -3,65 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { signJWT } from "@/utils/helpers/authHelpers";
 
-// import jwt from "jsonwebtoken";
-// import { validateJSONData } from "@/utils/helpers/apiHelpers";
-
 const prisma = new PrismaClient();
-
-// export async function POST(req) {
-  
-//   const [bodyHasErrors, body] = await validateJSONData(req);
-//   if (bodyHasErrors) {
-//     return NextResponse.json({
-//       message: "A valid JSON object has to be sent",
-//     }, {
-//       status: 400
-//     });
-//   }
-
-//   // Hitta användaren i databasen med e-postadressen
-//   const user = await prisma.user.findUnique({
-//     where: {email: body.email},
-//   });
-
-//   if (!user) {
-//     return NextResponse.json({
-//       message: "Invalid email or password",
-//       }, {
-//         status: 401,
-//       });
-//   }
-
-//   // Jämför det inskickade lösenordet med det hashade lösenordet i databasen
-//   const isPasswordValid = await bcrypt.compare(body.password, user.password);
-//   if (!isPasswordValid) {
-//     return NextResponse.json(
-//       {
-//         message: "Invalid email or password",
-//       },
-//       {
-//         status: 401,
-//       });
-//   }
-
-//   const token = jwt.sign({
-//     userId: user.id, email: user.email
-//   },
-//   process.env.JWT_SECRET,
-//   {
-//     expiresIn: "1h", //Token utgångstid
-//   });
-  
-//   return NextResponse.json(
-//     {
-//       token: token,
-//       message: "Login successful",
-//     },
-//     {
-//       status: 200,
-//     }
-//   );
-// }
 
 export async function POST(req) {
   let body; 
@@ -112,11 +54,11 @@ export async function POST(req) {
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json(
-      {
-        error: error.message
-      }, {
-        status: 400
-      }
+    {
+      error: error.message
+    }, {
+          status: 400
+        }
     );
   }
 }

@@ -8,7 +8,7 @@ function Header() {
 
   return (
     <header className="flex items-center justify-between bg-gray-800 p-4">
-      <h1 className="text-3xl font-bold text-white">Library</h1>
+      <h1 className="text-3xl font-bold text-white">Inventory</h1>
       {auth.token ? (
         <Link
           href="/"
