@@ -2,43 +2,6 @@
 
 import { useState } from "react";
 import { useAuth } from "@/context/auth";
-// import { useRouter } from "next/navigation";
-
-// function ItemList({ item }) {
-//   return (
-//     <div className="max-w-sm rounded overflow-hidden shadow-lg bg-white p-6 mb-4">
-//       <div className="font-bold text-xl mb-2">{item.name}</div>
-
-//       <p className="text-gray-700 text-base">
-//         <span className="font-semibold">Description:</span> {item.description || "No description"}
-//       </p>
-//       <p className="text-gray-700 text-base">
-//         <span className="font-semibold">Category:</span> {item.category}
-//       </p>
-//       <p className="text-gray-700 text-base">
-//         <span className="font-semibold">Quantity:</span> {item.quantity}
-//       </p>
-
-//       {/* Knappar för att radera och redigera */}
-//       <div className="flex justify-between items-center mt-4">
-//         <button
-//           className="text-blue-500 hover:text-blue-700"
-//           title="Edit item"
-//         >
-//           ✏️ {/* Edit icon */}
-//         </button>
-//         <button
-//           className="text-red-500 hover:text-red-700"
-//           title="Delete item"
-//         >
-//           🗑️ {/* Delete icon */}
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ItemList;
 
 function ItemList({
   item,
@@ -140,7 +103,7 @@ function ItemList({
   };
 
   return (
-    <div className="flex  w-full rounded overflow-hidden shadow-lg bg-white p-6 m-2">
+    <div className="flex w-full rounded overflow-hidden shadow-lg bg-white p-6 m-2">
       {isEditing ? (
         // Redigeringsläge: visa input-fält för redigering
         <>
@@ -189,29 +152,21 @@ function ItemList({
       ) : (
         // Visa item-information om inte i redigeringsläge
         <>
-        <div className="flex w-full items-center justify-between mt-4 gap-4
-        ">
-          <p className="font-bold text-xl w-fit">
-            {item.name}
-          </p>
-          <p className="text-gray-700 text-base w-fit">
-            <span className="font-semibold">
-              Description:
-            </span>{" "}
-            {item.description || "No description"}
-          </p>
-          <p className="text-gray-700 text-base w-fit">
-            <span className="font-semibold">
-              Category:
-            </span>{" "}
-            {item.category}
-          </p>
-          <p className="text-gray-700 text-base w-fit">
-            <span className="font-semibold">
-              Quantity:
-            </span>{" "}
-            {item.quantity}
-          </p>
+        <div className="flex w-full items-center justify-between mt-4 gap-4">
+          <ul className="flex w-full justify-between">
+            <li key={item.id} className="font-bold text-xl w-fit">
+              {item.name}
+            </li>
+            <li key={`${item.id}-description`} className="text-gray-700 text-base w-fit">
+              <p className="font-semibold">Description:</p> {item.description || "No description"}
+            </li>
+            <li key={`${item.id}-category`} className="text-gray-700 text-base w-fit">
+              <p className="font-semibold">Category:</p> {item.category}
+            </li>
+            <li key={`${item.id}-quantity`} className="text-gray-700 text-base w-fit">
+              <p className="font-semibold">Quantity:</p> {item.quantity}
+            </li>
+          </ul>
 
           {/* Knappar för att radera och redigera */}
           <div className="flex w-fit items-center gap-4">

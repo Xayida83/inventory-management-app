@@ -70,17 +70,7 @@ export default function ItemsPage() {
 
   //* Hantera skapandet av ett nytt item
   const handleItemCreated = (newItem) => {
-    setItems((prevItems) => [...prevItems, newItem]); // Lägg till det nya itemet i listan
-  };
-
-  //* Handle search input change
-  const handleSearchChange = (e) => {
-    setSearchCategory(e.target.value);
-  };
-
-  //* Handle in-stock checkbox change
-  const handleInStockChange = (e) => {
-    setInStockOnly(e.target.checked);
+    setItems((prevItems) => [...prevItems, newItem]); // Lägger till det nya itemet i listan
   };
 
   return (

@@ -4,8 +4,9 @@ import { verifyJWT, getAuthHeader } from "./utils/helpers/authHelpers";
 const unsafeMethods = ["POST", "PUT", "DELETE"];
 
 //* middleware loggar varje förfrågning och hämtar URL för att analysera förfrågningsvägen.
+//* Hämtar den aktuella URL-vägen för att kunna kontrollera om det är en väg som kräver autentisering.
 export async function middleware(req) {
-  console.log("Middleware is running", req.url.pathname); //* Hämtar den aktuella URL-vägen för att kunna kontrollera om det är en väg som kräver autentisering.
+  console.log("Middleware is running", req.url.pathname); 
   const url = new URL(req.url);
 
   //* Middleware-funktionen kontrollerar om förfrågan använder en av de "osäkra" metoderna (POST, PUT, eller DELETE), eller om vägen innehåller /api/users. Om så är fallet, initierar den en JWT-verifieringsprocess.
@@ -29,7 +30,7 @@ export async function middleware(req) {
       const headers = new Headers(req.headers);
       headers.set("userId", JSON.stringify(jwtPayload.userId));
 
-      //* NextResponse.next({ headers: headers }): Fortsätt med förfrågningen och skicka med de uppdaterade headers.
+      //* Fortsätter med förfrågningen och skickar med de uppdaterade headers.
       return NextResponse.next({ headers: headers });
     } catch (error) {
       return NextResponse.json(

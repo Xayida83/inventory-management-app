@@ -1,10 +1,14 @@
 "use client";
 
 function ItemActions({ searchCategory, setSearchCategory, inStockOnly, setInStockOnly, onCreateNewItem }) {
+  //* Här hanteras användarens input från sökfältet. Varje gång användaren skriver något i sökfältet uppdateras searchCategory-state, vilket sedan används för att filtrera resultaten baserat på kategori.
   const handleSearchChange = (e) => {
     setSearchCategory(e.target.value);
   };
+  // e.target.value: Hämtar värdet som användaren skriver in i sökfältet.
+  // setSearchCategory: Uppdaterar state-variabeln searchCategory med det nya värdet från sökfältet.
 
+  //* Denna funktion uppdaterar om vi ska visa endast items som finns i lager. Genom att kontrollera om användaren har kryssat i rutan 'In Stock Only' uppdateras inStockOnly-state, och listan filtreras därefter.
   const handleInStockChange = (e) => {
     setInStockOnly(e.target.checked);
   };

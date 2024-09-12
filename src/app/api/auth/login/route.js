@@ -28,14 +28,14 @@ export async function POST(req) {
       where: { email: body.email},
     });
 
-    // Kontrollera om användaren existerar och jämför lösenordet
+    //* Kontrollera om användaren existerar och jämför lösenordet
     if (!user || !(await bcrypt.compare(body.password, user.password))) {
       return NextResponse.json(
         { message: "Invalid email or password" },
         { status: 401 }
       );
     }
-    // Om lösenordet är korrekt, signera JWT med JOSE
+    //* Om lösenordet är korrekt, signera JWT med JOSE
     const token = await signJWT({ userID: user.id });
 
     return NextResponse.json(
