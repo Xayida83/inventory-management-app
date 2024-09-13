@@ -3,22 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth";
+import errorHandling from "@/utils/helpers/errorHandling";
 
 function AuthForm() {
+  const {error, handleError, clearError} = errorHandling();
   const router = useRouter();
   const auth = useAuth();
 
   const [email, setEmail] = useState("test+vortals@testsson.com");
   const [password, setPassword] = useState("123123abc");
   const [name, setName] = useState("");
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [successMessage, setSuccessMessage] = useState(""); // Nytt state för att hantera registrerad meddelande
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError("");
-    setSuccessMessage(""); // Rensa tidigare meddelanden
+    clearError(); // Rensa tidigare fel
 
     const url = isLogin ? "/api/auth/login" : "/api/auth/register";
     const response = await fetch(url, {
@@ -33,20 +34,16 @@ function AuthForm() {
       }),
     });
 
-    if (response.ok) {
-      const data = await response.json();
-
+    try {
+      const data = await handleError(response, "Invalid login credentials");
       if (isLogin) {
-        // Vid inloggning, omdirigera till items
-        localStorage.setItem("@inventory/token", data.token);
         auth.setToken(data.token);
         router.push("/items");
       } else {
-        // Vid registrering, visa meddelande och inte bli omdirigerad
         setSuccessMessage("Account created successfully! You can now log in.");
       }
-    } else {
-      setError("Invalid login credentials");
+    } catch (err) {
+      // Error already handled by handleError
     }
   }
 

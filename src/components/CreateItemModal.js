@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/auth";
 
+
 export default function CreateItemModal({ onClose, onItemCreated }) {
   const auth = useAuth();
   const [name, setName] = useState("");
@@ -13,6 +14,12 @@ export default function CreateItemModal({ onClose, onItemCreated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+     // Kontrollera om användaren är inloggad
+    if (!auth.token) {
+      setError("You must be logged in to create an item.");
+      return;
+    }
 
     try {
       console.log({ name, description, category, quantity }); 
@@ -30,7 +37,7 @@ export default function CreateItemModal({ onClose, onItemCreated }) {
         throw new Error("Failed to create item");
       }
 
-      const newItem = await response.json();
+      // const newItem = await response.json();
       onItemCreated(); // Skicka tillbaka det skapade itemet till parent
       // onClose(); // Stäng modalen
     } catch (error) {

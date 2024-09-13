@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/context/auth";
+import errorHandling from "@/utils/helpers/errorHandling";
 
 function ItemList({
   item,
@@ -10,9 +11,8 @@ function ItemList({
 }) {
   // Inkludera onItemUpdated som en prop
   const auth = useAuth();
-  const [isEditing, setIsEditing] = useState(
-    false
-  ); // State för edit-läge
+  // const { error, handleError, clearError } = errorHandling();
+  const [isEditing, setIsEditing] = useState(false); // State för edit-läge
   const [editedItem, setEditedItem] = useState({
     ...item,
   }); // State för redigerad item
@@ -74,6 +74,13 @@ function ItemList({
 
   // Funktion för att radera ett item
   const handleDelete = async () => {
+
+     // Kontrollera om användaren är inloggad
+    if (!auth.token) {
+      setError("You must be logged in to create an item.");
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:3000/api/items/${item.id}`,

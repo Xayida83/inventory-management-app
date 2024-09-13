@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { verifyJWT, getAuthHeader } from "@/utils/helpers/authHelpers";  // Importera JWT-verifieringsfunktionen
+import { validateItemData } from "@/utils/helpers/apiHelpers";
 
 const prisma = new PrismaClient();
 
@@ -86,6 +87,14 @@ export async function POST(req) {
   try {
     const body = await req.json();
 
+    const [hasErrors, errors] = validateItemData(body);
+    if (hasErrors) {
+      return NextResponse.json(
+        { message: `Validation errors: ${errors.join(", ")}` },
+        { status: 400 }
+      );
+    }
+    
     const newItem = await prisma.item.create({
       data: {
         name: body.name,
