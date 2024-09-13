@@ -60,7 +60,7 @@ export async function PUT(req, options) {
   
   if (!token) {
     return NextResponse.json(
-      { message: "Unauthorized" },
+      { message: "Unauthorized - No token provided" },
       { status: 401 }
     );
   }
@@ -68,7 +68,7 @@ export async function PUT(req, options) {
   const decoded = verifyJWT(token);
   if (!decoded) {
     return NextResponse.json(
-      { message: "Unauthorized" },
+      { message: "Unauthorized - Invalid or expired token" },
       { status: 401 }
     );
   }
@@ -77,7 +77,7 @@ export async function PUT(req, options) {
   const [bodyHasErrors, body] = await validateJSONData(req);
   if (bodyHasErrors) {
     return NextResponse.json({
-      message: "A valid JSON object has to be sent",
+      message: "Invalid JSON object",
     }, {
       status: 400,
     });
@@ -87,7 +87,7 @@ export async function PUT(req, options) {
   const [hasErrors, errors] = validateItemData(body);
   if (hasErrors) {
     return NextResponse.json({
-      message: errors.join(', '),
+      message:"Validation errors: " + errors.join(', '),
     }, {
       status: 400,
     });
@@ -104,7 +104,7 @@ export async function PUT(req, options) {
         category: body.category,
       },
     });
-    return NextResponse.json(updatedItem, { status: 200 });
+    return NextResponse.json(updatedItem, {message:"Success updating item"},{ status: 200 });
   } catch (error) {
     // Om item inte hittas eller det uppstår andra fel
     return NextResponse.json({ message: "Item not found or update failed" + error.message }, { status: 404 });

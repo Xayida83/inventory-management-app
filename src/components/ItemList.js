@@ -16,6 +16,7 @@ function ItemList({
   const [editedItem, setEditedItem] = useState({
     ...item,
   }); // State för redigerad item
+  const [error, setError] = useState(null); // State för felmeddelanden
 
   // Funktion för att hantera redigeringsläge
   const handleEditClick = () => {
@@ -33,6 +34,11 @@ function ItemList({
   
   // Funktion för att spara ändringar
   const handleSave = async () => {
+    if (!editedItem.name || editedItem.name.trim() === "") {
+      setError("Name is required. Please fill in the item name."); // Visa felmeddelande
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:3000/api/items/${item.id}`,
@@ -47,7 +53,8 @@ function ItemList({
       );
       
       if (!response.ok) {
-        throw new Error("Failed to update item");
+        const data = await response.json();
+        throw new Error(data.message ||"Failed to update item");
       }
 
       const updatedItem = await response.json();
@@ -55,19 +62,13 @@ function ItemList({
       // Uppdatera item i parent-komponenten
       if (onItemUpdated) {
         onItemUpdated(updatedItem); // Skicka det uppdaterade itemet tillbaka till parent
-      } else {
-        console.error(
-          "onItemUpdated is not defined"
-        );
-      }
+      } 
 
       console.log("Item updated successfully");
       setIsEditing(false); // Avsluta redigeringsläget
+      setError(null);
     } catch (error) {
-      console.error(
-        "Error updating item:",
-        error
-      );
+      setError(error.message);
     }
   };
 
@@ -105,8 +106,9 @@ function ItemList({
   return (
     <div className="flex w-full rounded overflow-hidden shadow-lg bg-white p-6 m-2">
       {isEditing ? (
-        // Redigeringsläge: visa input-fält för redigering
-        <>
+        // Redigeringsläge: visa input-fält för redigering        
+        <>       
+        {error && <p className="text-red-500">{error}</p>}
           <input
             type="text"
             name="name"
