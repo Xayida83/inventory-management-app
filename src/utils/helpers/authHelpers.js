@@ -2,7 +2,7 @@ import * as jose from "jose";
 
 const JWT_SECRET = process.env.JWT_SECRET; 
 
-const JWT_AUTH_EXP = "1y"
+const JWT_AUTH_EXP = "1h"
 
 function encodedSecret() {
     return new TextEncoder().encode(JWT_SECRET)

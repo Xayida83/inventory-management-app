@@ -5,6 +5,7 @@ const unsafeMethods = ["POST", "PUT", "DELETE"];
 
 //* middleware loggar varje förfrågning och hämtar URL för att analysera förfrågningsvägen.
 //* Hämtar den aktuella URL-vägen för att kunna kontrollera om det är en väg som kräver autentisering.
+//* Ansvarar för att kontrollera om tokenen är giltig innan användaren får åtkomst
 
 export async function middleware(req) {
   // Använd getAuthHeader för att extrahera token från request

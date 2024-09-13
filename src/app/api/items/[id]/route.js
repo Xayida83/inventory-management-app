@@ -76,6 +76,7 @@ export async function PUT(req, options) {
   // Validera JSON-data från begäran
   const [bodyHasErrors, body] = await validateJSONData(req);
   if (bodyHasErrors) {
+    console.error("Invalid JSON object received");
     return NextResponse.json({
       message: "Invalid JSON object",
     }, {
@@ -86,6 +87,7 @@ export async function PUT(req, options) {
   // Validera item-data
   const [hasErrors, errors] = validateItemData(body);
   if (hasErrors) {
+    console.error("Item validation errors:", errors.join(', '));
     return NextResponse.json({
       message:"Validation errors: " + errors.join(', '),
     }, {
@@ -107,7 +109,8 @@ export async function PUT(req, options) {
     return NextResponse.json(updatedItem, {message:"Success updating item"},{ status: 200 });
   } catch (error) {
     // Om item inte hittas eller det uppstår andra fel
-    return NextResponse.json({ message: "Item not found or update failed" + error.message }, { status: 404 });
+    console.error("Update failed:", error.message);
+    return NextResponse.json({ message: `Update failed: ${error.message}`,}, { status: 404 });
   }
 }
 

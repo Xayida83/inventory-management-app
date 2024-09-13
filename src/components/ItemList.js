@@ -16,7 +16,7 @@ function ItemList({
   const [editedItem, setEditedItem] = useState({
     ...item,
   }); // State för redigerad item
-  const [error, setError] = useState(null); // State för felmeddelanden
+  const [error, setError] = useState(null); //* State för felmeddelanden
 
   // Funktion för att hantera redigeringsläge
   const handleEditClick = () => {

@@ -98,7 +98,7 @@ export async function POST(req) {
     return NextResponse.json({
       message: "User already exists"
     }, {
-      status: 400
+      status: 409
     });
   }
 

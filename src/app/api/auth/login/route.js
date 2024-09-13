@@ -15,6 +15,7 @@ export async function POST(req) {
       status: 400
     });
   }
+  //* letar efter user email
   const user = await prisma.user.findUnique({
     where: { email: body.email },
   });
@@ -26,7 +27,7 @@ export async function POST(req) {
       status: 401,
     });
   }
-
+  //* Om användaren hittas, jämför vi det inskickade lösenordet (body.password) med det hashade lösenordet som finns lagrat i databasen.
   const isPasswordValid = await bcrypt.compare(body.password, user.password);
   if (!isPasswordValid) {
     return NextResponse.json(
@@ -37,7 +38,7 @@ export async function POST(req) {
         status: 401,
       });
   }
-
+    //* Om användarnamnet och lösenordet stämmer, skapas en JWT-token med användarens ID och e-post. Funktionen signJWT signerar och genererar en token som kan skickas tillbaka till klienten.
   const token = await signJWT({ userId: user.id, email: user.email });
 
   return NextResponse.json(
